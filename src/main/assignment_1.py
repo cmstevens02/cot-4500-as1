@@ -59,7 +59,7 @@ def find_min_terms(func):
     if (func == "(-1**k) * (x**k) / (k**3)"):
         tol = 0.0001
         flipped_tol = 1 / tol
-        n = flipped_tol / 10**3
+        n = flipped_tol ** (1/3)
         return(int(n))
  
 def bisection_method(left: float, right: float, given_function: str):
