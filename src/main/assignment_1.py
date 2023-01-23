@@ -52,6 +52,15 @@ def relative_error(precise, approximate):
     op = abs(precise - approximate) / abs(precise)
     return op
 
+# i didn't feel like importing math lol
+def ceiling(num): 
+    if ( num > 0 and (num / 1)!=0):
+        return int(num + 1)
+    elif ( num < 0 and (num / 1)!=0):
+        return int(num - 1)
+    else: 
+        return num
+
 
 # referenced from class 
 def find_min_terms(func): 
@@ -59,8 +68,8 @@ def find_min_terms(func):
     if (func == "(-1**k) * (x**k) / (k**3)"):
         tol = 0.0001
         flipped_tol = 1 / tol
-        n = flipped_tol ** (1/3)
-        return(int(n))
+        n = flipped_tol ** (1/3) - 1
+        return(ceiling(n))
  
 def bisection_method(left: float, right: float, given_function: str):
     # pre requisites
