@@ -1,4 +1,4 @@
-import numpy as np
+import decimal
 
 # takes in a binary string 
 # returns the double precision decimal form
@@ -48,9 +48,12 @@ def absolute_error(precise, approximate):
     op = precise-approximate
     return abs(op)
 
-def relative_error(precise, approximate):
-    op = abs(precise - approximate) / abs(precise)
-    return op
+def relative_error(precise:float, approximate: float):
+    sub_operation = absolute_error(precise, approximate)
+    div_operation = sub_operation /precise
+    div_operation = decimal.Decimal(sub_operation) / decimal.Decimal(precise)
+    
+    return round(div_operation, 31)
 
 # i didn't feel like importing math lol
 def ceiling(num): 
@@ -61,11 +64,32 @@ def ceiling(num):
     else: 
         return num
 
+def check_for_alternating(function_we_got: str):
+    term_check = check_for_negative_1_exponent_term(function_we_got)
+    return term_check
+
+def check_for_decreasing(function_we_got: str, x: int):
+    decreasing_check = True
+    k = 1
+    starting_val = abs(eval(function_we_got))
+    for k in range(2, 100):
+        result = abs(eval(function_we_got))
+        if starting_val <= result:
+            decreasing_check = False
+    return decreasing_check
+
+def check_for_negative_1_exponent_term(function: str) -> bool:
+    if "-1**k" in function:
+        return True
+    return False
 
 # referenced from class 
 def find_min_terms(func): 
+    x = 1
+    check1: bool = check_for_alternating(func)
+    check2: bool = check_for_decreasing(func, x)
 
-    if (func == "(-1**k) * (x**k) / (k**3)"):
+    if (check1 and check2):
         tol = 0.0001
         flipped_tol = 1 / tol
         n = flipped_tol ** (1/3) - 1
@@ -89,7 +113,6 @@ def bisection_method(left: float, right: float, given_function: str):
     # we can only specify a max iteration counter (this is ideal when we dont have all
     # the time in the world to find an exact solution. after 10 iterations, lets say, we
     # can approximate the root to be ###)
-    max_iterations = 20
     iteration_counter = 0
     while (diff >= tolerance):
         iteration_counter += 1
@@ -173,6 +196,7 @@ if __name__ == "__main__":
     print(roundIt, end="\n\n")
 
 # 4) Compute the absolute and relative error with the exact value from question 1 and its 3 digit rounding 
+    decimal.getcontext().prec = 31 
     abs_error = absolute_error(double,roundIt)
     print(abs_error)
 
@@ -194,4 +218,4 @@ print(bisection_method(left, right, function_string), end="\n\n")
 #newton Raphson method
 initial_approximation: float = -4
 tolerance: float = .0001
-print(newton_raphson(initial_approximation, tolerance, function_string))
+print(newton_raphson(initial_approximation, tolerance, function_string), end="\n\n")
